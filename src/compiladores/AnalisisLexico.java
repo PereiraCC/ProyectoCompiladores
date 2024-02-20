@@ -123,6 +123,8 @@ public class AnalisisLexico {
         
         octavaValidacion(archivo);
         
+        novenaValidacion(archivo);
+        
     }
     
     public void mostrarTokens(){
@@ -637,6 +639,140 @@ public class AnalisisLexico {
                     errores.add(lineaEndWhile + 1, manejoErrores.getOneError(9));
                 } else {
                     errores.add(lineaEndWhile, manejoErrores.getOneError(9));
+                }
+            }
+
+            lineasTextoErrores = errores;
+
+            //Se escribe el texto sin errores
+            archivo.lineasTextoRevisado = lineasTextoErrores;
+            archivo.escribirArchivo();
+            
+        }
+
+    }
+    
+    private void novenaValidacion(Archivo archivo){
+        
+        int posicion = 0;
+        int cantidad = 0;
+        boolean tienePalabraTry = false;
+        boolean tienePalabraCatch = false;
+        boolean tienePalabraEndTry = false;
+        int lineaPalabraTry = 0;
+        int lineaPalabraCatch = 0;
+        int lineaPalabraEndTry = 0;
+        List<String> errores = new ArrayList<>();
+        List<String> lineasEntreTry = new ArrayList<>();
+        List<String> lineasEntreEndTry = new ArrayList<>();
+        
+        String patternString = "(Try|Catch|End Try)";
+        
+        Pattern pattern = Pattern.compile(patternString);
+        
+        // Se sacan las palabras Try
+        for(String line : archivo.lineasTexto){
+            
+            posicion++;
+            
+            Matcher matcher = pattern.matcher(line);
+            
+            while (matcher.find()) {
+                                
+                if(line.contains("Try") && !tienePalabraTry ){
+                    tienePalabraTry = true;
+                    cantidad++;
+                    lineaPalabraTry = posicion;
+                } else if(line.contains("Catch") && line.contains("As") && line.contains("Exception") && !tienePalabraCatch){
+                    tienePalabraCatch = true;
+                    cantidad++;
+                    lineaPalabraCatch = posicion;
+                } else if(line.contains("End Try") && !tienePalabraEndTry){
+                    tienePalabraEndTry = true;
+                    cantidad++;
+                    lineaPalabraEndTry = posicion;
+                }
+                
+            }
+            
+        }
+                
+        if(tienePalabraTry && tienePalabraCatch && tienePalabraEndTry && cantidad == 3) {
+            
+            for (int i = lineaPalabraTry + 1; i < lineaPalabraCatch; i++) {
+                if(archivo.lineasTexto.get(i) != null){
+                    lineasEntreTry.add(archivo.lineasTexto.get(i));
+                }
+            }
+            
+            for (int i = lineaPalabraCatch + 1; i < lineaPalabraEndTry; i++) {
+                if(archivo.lineasTexto.get(i) != null){
+                    lineasEntreEndTry.add(archivo.lineasTexto.get(i));
+                }
+            }
+            
+            if( lineasEntreTry.size() > 0 && lineasEntreEndTry.size() > 0){
+                //Se escribe el texto sin errores
+                archivo.lineasTextoRevisado = lineasTextoErrores;
+                archivo.escribirArchivo();
+            } else {
+                
+                for(String line : lineasTextoErrores){
+                    errores.add(line);
+                }
+                
+                if( lineasEntreTry.size() == 0) {
+                    if(errores.get(lineaPalabraTry).contains("Try")){
+                        errores.add(lineaPalabraTry + 1, manejoErrores.getOneError(15));
+                    } else {
+                        errores.add(lineaPalabraTry, manejoErrores.getOneError(15));
+                    }
+                } 
+                
+                if( lineasEntreEndTry.size() == 0) {
+                    if(errores.get(lineaPalabraCatch).contains("Catch")){
+                        errores.add(lineaPalabraCatch + 1, manejoErrores.getOneError(16));
+                    } else {
+                        errores.add(lineaPalabraCatch, manejoErrores.getOneError(16));
+                    }
+                }
+
+                lineasTextoErrores = errores;
+
+                //Se escribe el texto sin errores
+                archivo.lineasTextoRevisado = lineasTextoErrores;
+                archivo.escribirArchivo();
+            }
+            
+        } else {
+            
+            for(String line : lineasTextoErrores){
+                errores.add(line);
+            }
+
+            if(tienePalabraTry && !tienePalabraCatch){
+                if(errores.get(lineaPalabraTry).contains("Try")){
+                    errores.add(lineaPalabraTry + 1, manejoErrores.getOneError(13));
+                } else {
+                    errores.add(lineaPalabraTry, manejoErrores.getOneError(13));
+                }
+            } else if(!tienePalabraCatch && tienePalabraTry) {
+                if(errores.get(lineaPalabraCatch).contains("Catch")){
+                    errores.add(lineaPalabraCatch + 1, manejoErrores.getOneError(12));
+                } else {
+                    errores.add(lineaPalabraCatch, manejoErrores.getOneError(12));
+                }
+            } else if(tienePalabraCatch && !tienePalabraEndTry) {
+                if(errores.get(lineaPalabraCatch).contains("Catch")){
+                    errores.add(lineaPalabraCatch + 1, manejoErrores.getOneError(14));
+                } else {
+                    errores.add(lineaPalabraCatch, manejoErrores.getOneError(14));
+                }
+            } else if(tienePalabraEndTry && !tienePalabraCatch) {
+                if(errores.get(lineaPalabraCatch).contains("End Try")){
+                    errores.add(lineaPalabraCatch + 1, manejoErrores.getOneError(13));
+                } else {
+                    errores.add(lineaPalabraCatch, manejoErrores.getOneError(13));
                 }
             }
 

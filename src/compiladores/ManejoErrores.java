@@ -26,6 +26,11 @@ public class ManejoErrores {
         errores.put(9, "08. Error: Falta el componente While o esta mal escrito.");
         errores.put(10, "09. Error: Falta el componente End While o esta mal escrito.");
         errores.put(11, "10. Error: El componente While no tiene un identificador.");
+        errores.put(12, "11. Error: Falta el componente Try o esta mal escrito.");
+        errores.put(13, "12. Error: Falta el componente Catch o esta mal escrito.");
+        errores.put(14, "13. Error: Falta el componente End Try o esta mal escrito.");
+        errores.put(15, "14. Error: El componente Try no tiene un identificador.");
+        errores.put(16, "15. Error: El componente Catch no tiene un identificador.");
     }
     
     public String getOneError(int idError){
