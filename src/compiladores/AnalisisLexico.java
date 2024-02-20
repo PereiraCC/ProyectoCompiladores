@@ -125,6 +125,8 @@ public class AnalisisLexico {
         
         novenaValidacion(archivo);
         
+        decimaValidacion(archivo);
+        
     }
     
     public void mostrarTokens(){
@@ -784,5 +786,47 @@ public class AnalisisLexico {
             
         }
 
+    }
+    
+    private void decimaValidacion(Archivo archivo){
+        
+        int cantidadIdentificadores = 0;
+        List<String> identificadores = new ArrayList<>();
+        List<String> identificadoresSinValidar = new ArrayList<>();
+        List<String> errores = new ArrayList<>();
+        
+        for(String line : archivo.lineasTexto){
+                        
+            if(line.contains("Dim") && line.contains("As")){
+                identificadoresSinValidar.add(line);
+            }
+        }
+        
+        for(String identificador : identificadoresSinValidar){
+            
+            String[] words = identificador.split("\\W+");
+            if(words[1].equals("Dim") && words[3].equals("As")){
+                identificadores.add(identificador);
+                cantidadIdentificadores++;
+            }
+        }
+                               
+        for(String line : lineasTextoErrores){
+            errores.add(line);
+        }
+        
+        errores.add("");
+        errores.add("Cantidad de Identificadores: " + cantidadIdentificadores);
+        errores.add("Identificadores");
+
+        for(String identificador : identificadores){
+            errores.add(identificador.replaceFirst("^ *", ""));
+        }
+
+        lineasTextoErrores = errores;
+
+        //Se escribe el texto sin errores
+        archivo.lineasTextoRevisado = lineasTextoErrores;
+        archivo.escribirArchivo();
     }
 }
