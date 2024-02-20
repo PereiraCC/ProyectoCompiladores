@@ -23,6 +23,9 @@ public class ManejoErrores {
         errores.put(6, "05. Error: Falta el componente Sub Main o esta mal escrito.");
         errores.put(7, "06. Error: Falta el componente End Sub o esta mal escrito.");
         errores.put(8, "07. Error: La linea supera los 90 caracteres.");
+        errores.put(9, "08. Error: Falta el componente While o esta mal escrito.");
+        errores.put(10, "09. Error: Falta el componente End While o esta mal escrito.");
+        errores.put(11, "10. Error: El componente While no tiene un identificador.");
     }
     
     public String getOneError(int idError){

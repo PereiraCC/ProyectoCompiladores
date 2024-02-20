@@ -121,6 +121,8 @@ public class AnalisisLexico {
         
         septimaValidacion(archivo);
         
+        octavaValidacion(archivo);
+        
     }
     
     public void mostrarTokens(){
@@ -547,5 +549,104 @@ public class AnalisisLexico {
         //Se escribe el texto sin errores
         archivo.lineasTextoRevisado = lineasTextoErrores;
         archivo.escribirArchivo();
+    }
+    
+    private void octavaValidacion(Archivo archivo){
+        
+        int posicion = 0;
+        int cantidad = 0;
+        boolean tienePrimeraPalabra = false;
+        boolean tieneSegundaPalabra = false;
+        int lineaWhile = 0;
+        int lineaEndWhile = 0;
+        List<String> errores = new ArrayList<>();
+        List<String> lineasEntreWhile = new ArrayList<>();
+        
+        String patternString = "(While|End While)";
+        
+        Pattern pattern = Pattern.compile(patternString);
+        
+        // Se sacan las palabras While
+        for(String line : archivo.lineasTexto){
+            
+            posicion++;
+            
+            Matcher matcher = pattern.matcher(line);
+            
+            while (matcher.find()) {
+                                
+                if(line.contains("End While") && !tieneSegundaPalabra ){
+                    tieneSegundaPalabra = true;
+                    cantidad++;
+                    lineaEndWhile = posicion;
+                } else if(line.contains("While") && !tienePrimeraPalabra){
+                    tienePrimeraPalabra = true;
+                    cantidad++;
+                    lineaWhile = posicion;
+                }
+                
+            }
+            
+        }
+                
+        if(tienePrimeraPalabra && tieneSegundaPalabra && cantidad == 2) {
+            
+            for (int i = lineaWhile + 1; i < lineaEndWhile; i++) {
+                if(archivo.lineasTexto.get(i) != null){
+                    lineasEntreWhile.add(archivo.lineasTexto.get(i));
+                }
+            }
+            
+            if( lineasEntreWhile.size() > 0 ){
+                //Se escribe el texto sin errores
+                archivo.lineasTextoRevisado = lineasTextoErrores;
+                archivo.escribirArchivo();
+            } else {
+                
+                for(String line : lineasTextoErrores){
+                    errores.add(line);
+                }
+
+                if(errores.get(lineaWhile).contains("While")){
+                    errores.add(lineaWhile + 1, manejoErrores.getOneError(11));
+                } else {
+                    errores.add(lineaWhile, manejoErrores.getOneError(11));
+                }
+
+                lineasTextoErrores = errores;
+
+                //Se escribe el texto sin errores
+                archivo.lineasTextoRevisado = lineasTextoErrores;
+                archivo.escribirArchivo();
+            }
+            
+        } else {
+            
+            for(String line : lineasTextoErrores){
+                errores.add(line);
+            }
+
+            if(tienePrimeraPalabra && !tieneSegundaPalabra){
+                if(errores.get(lineaWhile).contains("While")){
+                    errores.add(lineaWhile + 1, manejoErrores.getOneError(10));
+                } else {
+                    errores.add(lineaWhile, manejoErrores.getOneError(10));
+                }
+            } else if(!tienePrimeraPalabra && tieneSegundaPalabra) {
+                if(errores.get(lineaEndWhile).contains("End While")){
+                    errores.add(lineaEndWhile + 1, manejoErrores.getOneError(9));
+                } else {
+                    errores.add(lineaEndWhile, manejoErrores.getOneError(9));
+                }
+            }
+
+            lineasTextoErrores = errores;
+
+            //Se escribe el texto sin errores
+            archivo.lineasTextoRevisado = lineasTextoErrores;
+            archivo.escribirArchivo();
+            
+        }
+
     }
 }
