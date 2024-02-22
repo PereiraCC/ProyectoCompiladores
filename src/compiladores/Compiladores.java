@@ -5,8 +5,6 @@
 package compiladores;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  *
@@ -41,13 +39,11 @@ public class Compiladores {
                     // Lee el contenido del archivo
                     archivo.leerArchivo(filename, analisis);
                     
+                    // Se analisis el texto
                     analisis.analisisTexto(archivo);
                     
-                    // Se escribe el contenido del archivo
-//                    archivo.escribirArchivo();
-                    
                 } else {
-                    System.out.println("El archivo no tiene un extencion vb");
+                    System.out.println("El archivo no tiene un extensión vb");
                 }
                 
                 
@@ -55,7 +51,6 @@ public class Compiladores {
                 System.out.println("Favor indicar un archivo con extencion vb para analizar.");
             }
 
-            
         }
         catch(IOException ex){
             throw ex;

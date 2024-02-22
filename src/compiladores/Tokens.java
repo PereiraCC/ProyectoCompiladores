@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Tokens {
     
+    // Propiedades de los tokens
     private List<String> _palabrasReservadas;
     
     private List<String> _identificadores;
@@ -37,6 +38,7 @@ public class Tokens {
     
     private List<String> _punto;
     
+    // Construccion de la clase
     public Tokens() {
         
         this._palabrasReservadas = new ArrayList<>();
@@ -53,6 +55,7 @@ public class Tokens {
         this._punto = new ArrayList<>();        
     }
 
+    // Metodos get y set
     public List<String> getPalabrasReservadas() {
         return _palabrasReservadas;
     }

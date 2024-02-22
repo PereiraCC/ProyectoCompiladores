@@ -22,12 +22,10 @@ import java.util.List;
  */
 public class Archivo {
     
+    // Se declaran las variables
     public String nameFile = "";
-    
     public String textoCompleto = "";
-        
     public List<String> lineasTexto = new ArrayList<>();
-    
     public List<String> lineasTextoRevisado = new ArrayList<>();
         
     public boolean validoExtensionArchivo(String filename){
@@ -46,6 +44,7 @@ public class Archivo {
            esValido = true;
         }
         
+        // Se retorna el resultado
         return esValido;
         
     }
@@ -53,7 +52,6 @@ public class Archivo {
     public void leerArchivo(String filename, AnalisisLexico analisisLexico) throws IOException {
         
         String linea;
-        
         BufferedReader br;
         
         try{
@@ -79,8 +77,6 @@ public class Archivo {
                 analisisLexico.clasificacionTokens(linea);
             }
             
-//            analisisLexico.mostrarTokens();
-            
         }
         catch(IOException ex){
             System.out.println("Archivo no encontrado o no se pudo abrir");
@@ -90,21 +86,25 @@ public class Archivo {
     public void escribirArchivo() {
         
         try {
+            // Se agrega las variables
             int contadorLineas = 1;
             String nameFileErrors = nameFile + "-Errores.txt";
-           
             FileWriter fstream;
-                       
+            
+            // Se utiliza FileWriter para escribir
             fstream = new FileWriter(nameFileErrors);
             BufferedWriter out = new BufferedWriter(fstream);
             
+            // Se escribe cada linea en el archivo
             for (String line : lineasTextoRevisado) 
             { 
+                // Se adjunta el numero de la linea
                 String numberLine = "00";
                 if(contadorLineas >= 1 && contadorLineas <= 9){
                     numberLine = "000";
                 }
                 
+                // Se escribe en el archivo
                 String newLine = numberLine + contadorLineas + " " + line;
                 
                 out.write(newLine);
@@ -113,6 +113,7 @@ public class Archivo {
                 contadorLineas++;
             }
             
+            // Se cierre el archivo
             out.close();  
             
         } catch (IOException e) {

@@ -6,8 +6,6 @@ package compiladores;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,20 +15,22 @@ import java.util.regex.Pattern;
  */
 public class AnalisisLexico {
     
+    // Se declara las variables
     Tokens tokens = new Tokens();
     ManejoErrores manejoErrores = new ManejoErrores();
     List<String> lineasTextoErrores = new ArrayList<>();
     
     int contador = 0;
     
-    // Crear la expresion regular
+    // Crear la expresion regular para la clasificacion de los tokens
     private String patron = "(Imports|Module|Program|Sub|Main|As|String|Console|WriteLine|Dim|IO|StreamReader|Boolean|New|Try|While|Not|If|Is|Nothing|Then|True|Else|End|While|Close|Catch|Exception|System|Message)"
             + "|([a-zA-Z]+)|([<|>]+)|([+]|[-])|([=]+)|([0-9]+)|([++]{2}|[--]{2})|"
             + "([(|)]+)|([{|}]+)|([\\[|\\]])|(;)|(\\.)";
-        
+    
+    // Este metodo clasifica los tokens
     public void clasificacionTokens(String texto) {
        
-        
+        // Se utiliza la expresion regular para clasificacion del token
         Pattern p = Pattern.compile(patron);
         Matcher matcher = p.matcher(texto);
                 
@@ -100,13 +100,16 @@ public class AnalisisLexico {
                 
     }
     
+    // Este metodo llama cada validacion del texto
     public void analisisTexto(Archivo archivo){
         
+        // Se recorre cada linea del archivo
         for(String line : archivo.lineasTexto){
 
             lineasTextoErrores.add(line);
         }
         
+        // Se llaman las validaciones.
         primeraValidacion(archivo);
         
         segundaValidacion(archivo);
@@ -129,6 +132,7 @@ public class AnalisisLexico {
         
     }
     
+    // Se muestran los tokens
     public void mostrarTokens(){
         System.out.println("TOTAL DE: "+contador+" TOKENS EN LA ASIGNACION.");
         System.out.println("Palabras Reservadas: " + tokens.getPalabrasReservadas());
@@ -145,6 +149,7 @@ public class AnalisisLexico {
         System.out.println("Punto: " + tokens.getPunto());
     }
     
+    // Primera Validacion los comandos Module Program y End Module
     private void primeraValidacion(Archivo archivo){
         
         int cantidad = 0;
@@ -211,7 +216,8 @@ public class AnalisisLexico {
             archivo.escribirArchivo();
         }
     }
-        
+    
+    // Segunda Validacion Imports antes del Module Program
     private void segundaValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -285,6 +291,7 @@ public class AnalisisLexico {
         }
     }
     
+    // Tercera Validacion solo comentarios despues del End Module
     private void terceraValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -364,6 +371,7 @@ public class AnalisisLexico {
         }
     }
     
+    // Cuarta Validacion el comando Sub Main esta en la misma linea
     private void cuartaValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -390,7 +398,6 @@ public class AnalisisLexico {
                 } else {
                     lineaError = posicion;
                 }
-                
             }
             
             if(tienePalabra){
@@ -420,6 +427,7 @@ public class AnalisisLexico {
         }
     }
     
+    // Quinta Validacion los comandos Sub Main y End Sub
     private void quitaValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -490,6 +498,7 @@ public class AnalisisLexico {
         }
     }
     
+    // Sexta Validacion cantidad de comentarios
     private void sextaValidacion(Archivo archivo){
         
         int cantidadComentarios = 0;
@@ -523,6 +532,7 @@ public class AnalisisLexico {
         archivo.escribirArchivo();
     }
     
+    // Septima validacion la linea no debe superar de 90 caracteres
     private void septimaValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -555,6 +565,7 @@ public class AnalisisLexico {
         archivo.escribirArchivo();
     }
     
+    // Octava validacion los comandos While y End While
     private void octavaValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -654,6 +665,7 @@ public class AnalisisLexico {
 
     }
     
+    // Novela validacion los comandos Try y Catch y End Try
     private void novenaValidacion(Archivo archivo){
         
         int posicion = 0;
@@ -788,6 +800,7 @@ public class AnalisisLexico {
 
     }
     
+    // Decima Validacion cantidad de identificadores
     private void decimaValidacion(Archivo archivo){
         
         int cantidadIdentificadores = 0;

@@ -12,8 +12,10 @@ import java.util.Hashtable;
  */
 public class ManejoErrores {
     
+    // Se maneja un HastTable para manejar los errores.
     public Hashtable<Integer, String> errores = new Hashtable<>();
     
+    // Se inicializan los errores.
     public ManejoErrores(){
         errores.put(1, "01. Error: Falta el componente End Module o esta mal escrito.");
         errores.put(2, "01. Error: Falta el componente Module Program o esta mal escrito.");
@@ -33,6 +35,7 @@ public class ManejoErrores {
         errores.put(16, "15. Error: El componente Catch no tiene un identificador.");
     }
     
+    // Metodo para obtener un error.
     public String getOneError(int idError){
         return errores.get(idError);
     }
